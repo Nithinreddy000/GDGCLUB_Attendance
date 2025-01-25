@@ -9,6 +9,7 @@ import Dashboard from './components/Dashboard';
 import AttendanceForm from './components/AttendanceForm';
 import MembersTable from './components/MembersTable';
 import TrendsChart from './components/TrendsChart';
+import MemberTrends from './components/MemberTrends';
 
 // Create a theme instance
 const theme = createTheme({
@@ -155,6 +156,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <TrendsChart />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/member-trends"
+              element={
+                <PrivateRoute>
+                  <MemberTrends />
                 </PrivateRoute>
               }
             />

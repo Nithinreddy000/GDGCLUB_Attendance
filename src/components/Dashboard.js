@@ -21,7 +21,9 @@ import {
   Assessment as AssessmentIcon,
   EventNote as EventNoteIcon,
   Logout as LogoutIcon,
-  Menu as MenuIcon
+  Menu as MenuIcon,
+  Person as PersonIcon,
+  TrendingUp as TrendingUpIcon
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import logo from '../assests/gdglogo.jpg';
@@ -61,7 +63,7 @@ const Dashboard = () => {
     },
     {
       title: 'Members Overview',
-      icon: <PersonAddIcon sx={{ fontSize: 40 }} />,
+      icon: <PersonIcon sx={{ fontSize: 40 }} />,
       description: 'View and manage all registered members',
       path: '/members',
       color: theme.palette.secondary.main
@@ -72,6 +74,13 @@ const Dashboard = () => {
       description: 'Analyze attendance patterns and statistics',
       path: '/trends',
       color: '#00bcd4'
+    },
+    {
+      title: 'Member Trends',
+      icon: <PersonAddIcon sx={{ fontSize: 40 }} />,
+      description: 'View individual member statistics',
+      path: '/member-trends',
+      color: '#f59e0b'
     }
   ];
 
@@ -91,7 +100,7 @@ const Dashboard = () => {
           <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
             <img src={logo} alt="Logo" style={{ height: '40px', marginRight: '16px' }} />
             <Typography variant="h6" component="div" sx={{ color: 'text.primary', display: { xs: 'none', sm: 'block' } }}>
-              GDSC IFHE
+              GDG IFHE
             </Typography>
           </Box>
           <IconButton 

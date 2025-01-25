@@ -140,51 +140,6 @@ const Login = () => {
 
   const handleSuccessfulLogin = async (user) => {
     try {
-      // Check if user exists in members table
-      const { data: members, error: memberError } = await supabase
-        .from('members')
-        .select()
-        .eq('user_id', user.id);
-
-      if (memberError) {
-        throw memberError;
-      }
-
-      const existingMember = members?.[0];
-
-      if (!existingMember) {
-        // Get the first department for new users
-        const { data: departments, error: deptError } = await supabase
-          .from('departments')
-          .select('id')
-          .limit(1);
-
-        if (deptError) {
-          throw deptError;
-        }
-
-        const defaultDepartmentId = departments?.[0]?.id;
-        if (!defaultDepartmentId) {
-          throw new Error('No departments found. Please contact administrator.');
-        }
-
-        // Add user to members table if they don't exist
-        const { error: insertError } = await supabase
-          .from('members')
-          .insert([
-            {
-              user_id: user.id,
-              name: user.user_metadata?.name || email.split('@')[0],
-              email: user.email,
-              department_id: defaultDepartmentId,
-            }
-          ]);
-
-        if (insertError) {
-          throw insertError;
-        }
-      }
-
       // Store user info in localStorage
       localStorage.setItem('user', JSON.stringify({
         id: user.id,
@@ -195,9 +150,9 @@ const Login = () => {
       // Navigate to dashboard
       navigate('/dashboard');
     } catch (error) {
-      console.error('Profile setup error:', error);
-      setError('Error setting up user profile. Please try again.');
-      // Clean up the auth session since profile setup failed
+      console.error('Login error:', error);
+      setError('Error during login. Please try again.');
+      // Clean up the auth session since there was an error
       await supabase.auth.signOut();
     }
   };
