@@ -245,7 +245,6 @@ const MembersTable = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell>Email</TableCell>
                 <TableCell>Department</TableCell>
                 <TableCell align="right">Actions</TableCell>
               </TableRow>
@@ -257,14 +256,12 @@ const MembersTable = () => {
                     <TableCell><Skeleton animation="wave" /></TableCell>
                     <TableCell><Skeleton animation="wave" /></TableCell>
                     <TableCell><Skeleton animation="wave" /></TableCell>
-                    <TableCell><Skeleton animation="wave" /></TableCell>
                   </TableRow>
                 ))
               ) : (
                 filteredMembers.map((member) => (
                   <TableRow key={member.id}>
                     <TableCell>{member.name}</TableCell>
-                    <TableCell>{member.email}</TableCell>
                     <TableCell>
                       <Chip 
                         label={member.departments?.name} 
@@ -348,3 +345,4 @@ const MembersTable = () => {
 };
 
 export default MembersTable;
+
