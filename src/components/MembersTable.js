@@ -57,6 +57,10 @@ const MembersTable = () => {
   const [editMode, setEditMode] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedMemberId, setSelectedMemberId] = useState(null);
+  const [recordAttendanceLoading, setRecordAttendanceLoading] = useState(false);
+  const [successDialogOpen, setSuccessDialogOpen] = useState(false);
+  const [loadingAddEdit, setLoadingAddEdit] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -156,6 +160,7 @@ const MembersTable = () => {
   };
 
   const handleConfirmDelete = async () => {
+    setLoadingDelete(true);
     try {
       const { error } = await supabase
         .from('members')
@@ -167,6 +172,7 @@ const MembersTable = () => {
     } catch (error) {
       console.error('Error deleting member:', error);
     } finally {
+      setLoadingDelete(false);
       handleCloseDeleteDialog();
     }
   };
@@ -181,6 +187,7 @@ const MembersTable = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoadingAddEdit(true);
     try {
       if (editMode) {
         const { error } = await supabase
@@ -192,7 +199,7 @@ const MembersTable = () => {
       } else {
         const { error } = await supabase
           .from('members')
-          .insert([formData]);
+          .insert([{ name: formData.name, department_id: formData.department_id }]);
 
         if (error) throw error;
       }
@@ -201,6 +208,21 @@ const MembersTable = () => {
       fetchMembers();
     } catch (error) {
       console.error('Error saving member:', error);
+    } finally {
+      setLoadingAddEdit(false);
+    }
+  };
+
+  const handleRecordAttendance = async () => {
+    setRecordAttendanceLoading(true);
+    try {
+      // Logic to record attendance goes here
+      await recordAttendance(); // Replace with your actual function to record attendance
+      setSuccessDialogOpen(true);
+    } catch (error) {
+      console.error('Error recording attendance:', error);
+    } finally {
+      setRecordAttendanceLoading(false);
     }
   };
 
@@ -226,6 +248,9 @@ const MembersTable = () => {
             sx={{ ml: 2 }}
           >
             Add Member
+          </Button>
+          <Button onClick={handleRecordAttendance} disabled={recordAttendanceLoading} variant="contained" sx={{ ml: 2 }}>
+            {recordAttendanceLoading ? 'Recording...' : 'Record Attendance'}
           </Button>
         </Box>
 
@@ -333,8 +358,8 @@ const MembersTable = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={handleSubmit} variant="contained">
-            {editMode ? 'Save Changes' : 'Add Member'}
+          <Button onClick={handleSubmit} disabled={loadingAddEdit} variant="contained">
+            {loadingAddEdit ? 'Saving...' : (editMode ? 'Save Changes' : 'Add Member')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -348,8 +373,23 @@ const MembersTable = () => {
           <Button onClick={handleCloseDeleteDialog} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleConfirmDelete} color="secondary">
-            Delete
+          <Button onClick={handleConfirmDelete} disabled={loadingDelete} color="secondary">
+            {loadingDelete ? 'Deleting...' : 'Delete'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={successDialogOpen} onClose={() => setSuccessDialogOpen(false)}>
+        <DialogTitle>Success</DialogTitle>
+        <DialogContent>
+          Attendance recorded successfully!
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => {
+            setSuccessDialogOpen(false);
+            navigate('/dashboard');
+          }} color="primary">
+            OK
           </Button>
         </DialogActions>
       </Dialog>
@@ -358,3 +398,4 @@ const MembersTable = () => {
 };
 
 export default MembersTable;
+
