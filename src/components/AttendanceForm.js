@@ -433,7 +433,7 @@ const AttendanceForm = () => {
                 disabled={submitting}
                 fullWidth={isMobile}
               >
-                {submitting ? 'Recording...' : 'Record Attendance'}
+                {submitting ? <CircularProgress size={24} /> : 'Record Attendance'}
               </Button>
             </Box>
           </form>
@@ -444,3 +444,4 @@ const AttendanceForm = () => {
 };
 
 export default AttendanceForm;
+
