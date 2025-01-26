@@ -120,12 +120,12 @@ const AttendanceForm = () => {
           const deptId = member.departments.id;
           if (!departmentAttendance[deptId]) {
             departmentAttendance[deptId] = {
-              attendance_records: {},
               event_date: eventDate.toISOString().split('T')[0],
               event_name: eventName,
               department_id: deptId,
               created_by: user.id,
-              present_count: 0
+              present_count: 0,
+              attendance_records: {}
             };
           }
           departmentAttendance[deptId].attendance_records[member.id] = true;
@@ -136,7 +136,7 @@ const AttendanceForm = () => {
       // Insert attendance records for each department
       for (const deptId in departmentAttendance) {
         const { error: insertError } = await supabase
-          .from('attendance_records')
+          .from('attendance') // Updated table name
           .insert([departmentAttendance[deptId]]);
 
         if (insertError) throw insertError;
@@ -444,4 +444,3 @@ const AttendanceForm = () => {
 };
 
 export default AttendanceForm;
-
