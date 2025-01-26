@@ -55,6 +55,8 @@ const MembersTable = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedMember, setSelectedMember] = useState(null);
   const [editMode, setEditMode] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [selectedMemberId, setSelectedMemberId] = useState(null);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -143,6 +145,32 @@ const MembersTable = () => {
     });
   };
 
+  const handleDeleteClick = (memberId) => {
+    setSelectedMemberId(memberId);
+    setOpenDeleteDialog(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+    setSelectedMemberId(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      const { error } = await supabase
+        .from('members')
+        .delete()
+        .eq('id', selectedMemberId);
+
+      if (error) throw error;
+      fetchMembers();
+    } catch (error) {
+      console.error('Error deleting member:', error);
+    } finally {
+      handleCloseDeleteDialog();
+    }
+  };
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData(prev => ({
@@ -173,20 +201,6 @@ const MembersTable = () => {
       fetchMembers();
     } catch (error) {
       console.error('Error saving member:', error);
-    }
-  };
-
-  const handleDelete = async (memberId) => {
-    try {
-      const { error } = await supabase
-        .from('members')
-        .delete()
-        .eq('id', memberId);
-
-      if (error) throw error;
-      fetchMembers();
-    } catch (error) {
-      console.error('Error deleting member:', error);
     }
   };
 
@@ -274,7 +288,7 @@ const MembersTable = () => {
                       </IconButton>
                       <IconButton
                         color="error"
-                        onClick={() => handleDelete(member.id)}
+                        onClick={() => handleDeleteClick(member.id)}
                       >
                         <DeleteIcon />
                       </IconButton>
@@ -324,12 +338,23 @@ const MembersTable = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          Are you sure you want to delete this member?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteDialog} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleConfirmDelete} color="secondary">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </MotionContainer>
   );
 };
 
 export default MembersTable;
-
-
-
-
