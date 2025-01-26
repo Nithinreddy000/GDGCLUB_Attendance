@@ -213,17 +213,21 @@ const MembersTable = () => {
     }
   };
 
-  const handleRecordAttendance = async () => {
+  const recordAttendance = async () => {
     setRecordAttendanceLoading(true);
     try {
       // Logic to record attendance goes here
-      await recordAttendance(); // Replace with your actual function to record attendance
-      setSuccessDialogOpen(true);
+      // Example: await supabase.from('attendance').insert([{ member_id: selectedMemberId, ... }]);
+      setSuccessDialogOpen(true); // Show success dialog after recording
     } catch (error) {
       console.error('Error recording attendance:', error);
     } finally {
       setRecordAttendanceLoading(false);
     }
+  };
+
+  const handleRecordAttendance = async () => {
+    await recordAttendance();
   };
 
   return (
@@ -398,4 +402,5 @@ const MembersTable = () => {
 };
 
 export default MembersTable;
+
 
