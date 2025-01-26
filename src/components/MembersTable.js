@@ -58,7 +58,6 @@ const MembersTable = () => {
 
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
     department_id: '',
   });
 
@@ -75,7 +74,6 @@ const MembersTable = () => {
         .select(`
           id,
           name,
-          email,
           department_id,
           departments (
             id,
@@ -113,7 +111,6 @@ const MembersTable = () => {
 
   const filteredMembers = members.filter(member =>
     member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    member.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     member.departments?.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -121,7 +118,6 @@ const MembersTable = () => {
     if (member) {
       setFormData({
         name: member.name,
-        email: member.email,
         department_id: member.department_id,
       });
       setSelectedMember(member);
@@ -129,7 +125,6 @@ const MembersTable = () => {
     } else {
       setFormData({
         name: '',
-        email: '',
         department_id: '',
       });
       setSelectedMember(null);
@@ -144,7 +139,6 @@ const MembersTable = () => {
     setEditMode(false);
     setFormData({
       name: '',
-      email: '',
       department_id: '',
     });
   };
@@ -245,7 +239,6 @@ const MembersTable = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell>Email</TableCell>
                 <TableCell>Department</TableCell>
                 <TableCell align="right">Actions</TableCell>
               </TableRow>
@@ -257,14 +250,12 @@ const MembersTable = () => {
                     <TableCell><Skeleton animation="wave" /></TableCell>
                     <TableCell><Skeleton animation="wave" /></TableCell>
                     <TableCell><Skeleton animation="wave" /></TableCell>
-                    <TableCell><Skeleton animation="wave" /></TableCell>
                   </TableRow>
                 ))
               ) : (
                 filteredMembers.map((member) => (
                   <TableRow key={member.id}>
                     <TableCell>{member.name}</TableCell>
-                    <TableCell>{member.email}</TableCell>
                     <TableCell>
                       <Chip 
                         label={member.departments?.name} 
@@ -309,16 +300,6 @@ const MembersTable = () => {
               margin="normal"
               required
             />
-            <TextField
-              fullWidth
-              label="Email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              margin="normal"
-              required
-            />
             <FormControl fullWidth margin="normal" required>
               <InputLabel>Department</InputLabel>
               <Select
@@ -348,6 +329,7 @@ const MembersTable = () => {
 };
 
 export default MembersTable;
+
 
 
 
